@@ -13,6 +13,11 @@
 
       # And use terminal with some sane defaults.
       terminal = "alacritty";
+
+      # Application launcher.
+      menu = "${pkgs.wofi}/bin/wofi --show run";
+
+      window.titlebar = true;
     };
   };
 

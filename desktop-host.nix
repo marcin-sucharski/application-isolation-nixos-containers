@@ -19,6 +19,21 @@ in {
     };
   };
 
+  environment.systemPackages = let
+    userName = "myuser";
+    containerName = "graphicalExample";
+    hostLauncher = pkgs.writeScriptBin "${containerName}-launcher" ''
+      #!${pkgs.stdenv.shell}
+      set -euo pipefail
+
+      if [[ "$(systemctl is-active container@${containerName}.service)" != "active" ]]; then
+        systemctl start container@${containerName}.service
+      fi
+
+      exec machinectl shell ${userName}@${containerName} /usr/bin/env bash --login -c "exec ${pkgs.wofi}/bin/wofi --show run"
+    '';
+  in [ hostLauncher ];
+
   containers.graphicalExample = let
     hostCfg = config;
     userName = "myuser";
