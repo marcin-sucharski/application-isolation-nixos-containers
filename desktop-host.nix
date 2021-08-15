@@ -90,6 +90,20 @@ in {
           Type = "oneshot";
         };
       };
+
+      systemd.services.fix-run-permission = {
+        script = ''
+          #!${pkgs.stdenv.shell}
+          set -euo pipefail
+
+          chown ${userName}:users /run/user/${toString userUid}
+          chmod u=rwx /run/user/${toString userUid}
+        '';
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+        };
+      };
     };
   };
 }
